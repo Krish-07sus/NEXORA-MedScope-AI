@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient History | MedScope-AI</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar">
+<a href="/" class="nav-brand"><i class="fa-solid fa-heart-pulse"></i> MedScope-AI</a>
+<div class="nav-links">
+<span style="color: var(--text-light);">Hi, {{ session.username }}</span>
+<a href="/" class="nav-btn nav-btn-outline"><i class="fa-solid fa-plus"></i> New Scan</a>
+<a href="/logout" class="nav-btn nav-btn-outline"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
+</div>
+</nav>
+<div class="container-large">
+<div class="header" style="margin-bottom:2rem;">
+<h1 style="text-align:left;"><i class="fa-solid fa-folder-open"></i> Scan History</h1>
+<p style="text-align:left;">Your previous patient analyses are securely stored here.</p>
+</div>
+{% if records %}
+<div class="history-grid">
+{% for row in records %}
+<div class="history-item" style="justify-content:space-between;">
+<div>
+<div class="history-header">
+<span class="history-date"><i class="fa-regular fa-calendar"></i> {{ row.date }}</span>
+<span class="history-risk">{{ row.risk }}% Risk</span>
+</div>
+<div style="font-weight:700;margin-bottom:10px;">{{ row.level }} Priority</div>
+<div class="vitals-mini">
+{% set shown = namespace(count=0) %}
+{% for key, value in row.items() %}
+{% if key not in ['id','user_id','date','risk','level','color','reasons','abnormal_count','conditions','explanation','symptoms','report_type'] and value is not none and value|string != '' and value|float > 0 and shown.count < 6 %}
+<div><span>{{ key|upper }}:</span> {{ value }}</div>
+{% set shown.count = shown.count + 1 %}
+{% endif %}
+{% endfor %}
+</div>
+</div>
+<a href="/view/{{ row.id }}" style="display:block;text-align:center;border:2px solid var(--primary);color:var(--primary);padding:8px;border-radius:12px;text-decoration:none;font-weight:700;margin-top:15px;"><i class="fa-solid fa-file-medical"></i> View Full Report</a>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<div class="card" style="text-align:center;padding:4rem;">
+<h3>No records found</h3>
+</div>
+{% endif %}
+</div>
+</body>
+</html>

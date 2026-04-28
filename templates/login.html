@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | MedScope-AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="/" class="nav-brand"><i class="fa-solid fa-heart-pulse"></i> MedScope-AI</a>
+    <div class="nav-links">
+        <a href="/" class="nav-btn nav-btn-outline"><i class="fa-solid fa-home"></i> Home</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="card auth-card">
+        <h2><i class="fa-solid fa-user-doctor" style="color: var(--primary);"></i> Portal Access</h2>
+        <p>Save patient history and access past reports.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="auth-toggle">
+            <button class="auth-btn active" id="btn-login" onclick="toggleAuth('login')">Login</button>
+            <button class="auth-btn" id="btn-register" onclick="toggleAuth('register')">Register</button>
+        </div>
+
+        <form action="/login" method="POST">
+            <input type="hidden" name="action" id="auth-action" value="login">
+            
+            <div style="margin-bottom: 1rem;">
+                <input type="text" name="username" placeholder="Username" required>
+            </div>
+            <div style="margin-bottom: 1.5rem;">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            
+            <button type="submit" id="submit-btn" class="accent"><i class="fa-solid fa-arrow-right-to-bracket"></i> Login Securely</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleAuth(type) {
+        document.getElementById('auth-action').value = type;
+        if(type === 'login') {
+            document.getElementById('btn-login').classList.add('active');
+            document.getElementById('btn-register').classList.remove('active');
+            document.getElementById('submit-btn').innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Login Securely';
+        } else {
+            document.getElementById('btn-register').classList.add('active');
+            document.getElementById('btn-login').classList.remove('active');
+            document.getElementById('submit-btn').innerHTML = '<i class="fa-solid fa-user-plus"></i> Create Account';
+        }
+    }
+</script>
+</body>
+</html>
